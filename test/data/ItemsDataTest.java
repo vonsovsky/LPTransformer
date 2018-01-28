@@ -1,13 +1,18 @@
 package data;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class ItemsDataTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testGetDistance() {
@@ -38,6 +43,7 @@ public class ItemsDataTest {
     public void testGetDistance_OutOfRange() {
         ItemsData itemsData = new ItemsData(prepareItems());
 
+        thrown.expect(IllegalArgumentException.class);
         itemsData.getDistance(1, 3);
     }
 
