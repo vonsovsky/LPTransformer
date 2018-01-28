@@ -1,11 +1,10 @@
 package transformation;
 
-import data.DistanceObject;
+import data.Position;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,8 +12,7 @@ public class LPTransformerTest {
 
     @Test
     public void testTransform() {
-        List<DistanceObject> distanceObjects = prepareDistances();
-        LPTransformer lpTransformer = new LPTransformer(distanceObjects);
+        LPTransformer lpTransformer = new LPTransformer(prepareItems());
 
         lpTransformer.transform();
 
@@ -22,16 +20,25 @@ public class LPTransformerTest {
                 "Minimize\r\n" +
                 " obj: error1 + error2 + error3\r\n" +
                 "Subject To\r\n" +
-                " a - b <= 1 + 0.2 * error1\r\n" +
-                " b - a <= 1 + 0.2 * error1\r\n" +
-                " b - c <= 1 + 0.2 * error2\r\n" +
-                " c - b <= 1 + 0.2 * error2\r\n" +
-                " a - c <= 1 + 0.2 * error3\r\n" +
-                " c - a <= 1 + 0.2 * error3\r\n" +
+                " x1_1 - x2_1 - 0.2 error1 <= 1\r\n" +
+                " x2_1 - x1_1 - 0.2 error1 <= 1\r\n" +
+                " x1_2 - x2_2 - 0.2 error1 <= 1\r\n" +
+                " x2_2 - x1_2 - 0.2 error1 <= 1\r\n" +
+                " x1_1 - x3_1 - 0.2 error2 <= 1\r\n" +
+                " x3_1 - x1_1 - 0.2 error2 <= 1\r\n" +
+                " x1_2 - x3_2 - 0.2 error2 <= 1\r\n" +
+                " x3_2 - x1_2 - 0.2 error2 <= 1\r\n" +
+                " x2_1 - x3_1 - 0.2 error3 <= 1\r\n" +
+                " x3_1 - x2_1 - 0.2 error3 <= 1\r\n" +
+                " x2_2 - x3_2 - 0.2 error3 <= 1\r\n" +
+                " x3_2 - x2_2 - 0.2 error3 <= 1\r\n" +
                 "Bounds\r\n" +
-                " 0.00 <= a\r\n" +
-                " 0.00 <= b\r\n" +
-                " 0.00 <= c\r\n" +
+                " 0.00 <= x1_1\r\n" +
+                " 0.00 <= x1_2\r\n" +
+                " 0.00 <= x2_1\r\n" +
+                " 0.00 <= x2_2\r\n" +
+                " 0.00 <= x3_1\r\n" +
+                " 0.00 <= x3_2\r\n" +
                 "Binary\r\n" +
                 " error1 error2 error3\r\n" +
                 "end";
@@ -41,13 +48,14 @@ public class LPTransformerTest {
     /**
      * Add simple triangle
      */
-    private List<DistanceObject> prepareDistances() {
-        List<DistanceObject> distanceObj = new ArrayList<>();
-        distanceObj.add(new DistanceObject(0.5, "a", "b"));
-        distanceObj.add(new DistanceObject(0.5, "b", "c"));
-        distanceObj.add(new DistanceObject(0.7071, "a", "c"));
+    private List<Position> prepareItems() {
+        List<Position> items = new ArrayList<>();
 
-        return distanceObj;
+        items.add(new Position(0, 0));
+        items.add(new Position(0.5, 0));
+        items.add(new Position(0.5, 0.5));
+
+        return items;
     }
 
 }
