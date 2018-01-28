@@ -4,6 +4,8 @@ import data.Position;
 import enums.Direction;
 import enums.Type;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,28 +19,40 @@ public class LPTransformer {
     private static double E = 0.2;
 
     private List<Position> items;
-    private Set<String> usedSymbols = new LinkedHashSet<>();
-    private LPFileGenerator lpFileGenerator = new LPFileGenerator();
+    private BufferedWriter bw;
 
-    public LPTransformer(List<Position> items) {
+    private Set<String> usedSymbols = new LinkedHashSet<>();
+    private LPFileGenerator lpFileGenerator;
+
+    public LPTransformer(List<Position> items, BufferedWriter bw) {
         this.items = items;
+        this.bw = bw;
     }
 
     public void transform() {
         checkNotNull(items != null);
         checkArgument(!items.isEmpty(), "Vector requires at least one element");
 
-        addObjectiveFunctionAndRememberSymbols();
-        addConstraints();
-        addBounds();
-        addTypes();
-        lpFileGenerator.addEnd();
+        lpFileGenerator = new LPFileGenerator(bw);
+        transformToFile();
+    }
+
+    private void transformToFile() {
+        try {
+            addObjectiveFunctionAndRememberSymbols();
+            addConstraints();
+            addBounds();
+            addTypes();
+            lpFileGenerator.addEnd();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
      * Mixing two responsibilities to save processor time (one loop less)
      */
-    private void addObjectiveFunctionAndRememberSymbols() {
+    private void addObjectiveFunctionAndRememberSymbols() throws IOException {
         String statement = " obj: ";
         for (int i = 0; i < items.size(); i++) {
             statement += "error" + (i + 1) + " + ";
@@ -54,7 +68,7 @@ public class LPTransformer {
         }
     }
 
-    private void addConstraints() {
+    private void addConstraints() throws IOException {
         int errorCounter = 1;
         for (int i = 0; i < items.size(); i++) {
             for (int j = i + 1; j < items.size(); j++) {
@@ -64,7 +78,7 @@ public class LPTransformer {
         }
     }
 
-    private void checkDistancesBetweenTwoItems(int index1, int index2, int errorCounter) {
+    private void checkDistancesBetweenTwoItems(int index1, int index2, int errorCounter) throws IOException {
         boolean overOneDistanceAdded = false;
 
         int dimensions = items.get(index1).getPosition().length;
@@ -81,7 +95,7 @@ public class LPTransformer {
         }
     }
 
-    private void addCloseConstraint(int index1, int index2, int subIndex, int errorCounter) {
+    private void addCloseConstraint(int index1, int index2, int subIndex, int errorCounter) throws IOException {
         String statement = String.format(" x%d_%d - x%d_%d - 0.2 error%d <= 1",
                 index1 + 1, subIndex + 1, index2 + 1, subIndex + 1, errorCounter);
         lpFileGenerator.addConstraint(statement);
@@ -91,7 +105,8 @@ public class LPTransformer {
         lpFileGenerator.addConstraint(statement);
     }
 
-    private void addDistantConstraint(int index1, int index2, int subIndex, int dimensions, int errorCounter) {
+    private void addDistantConstraint(int index1, int index2, int subIndex, int dimensions, int errorCounter)
+            throws IOException {
         String statement = String.format(" x%d_%d - x%d_%d + %d %d + %f error%d > 1",
                 index1 + 1, subIndex + 1, index2 + 1, subIndex + 1, M, dimensions - 1, E, errorCounter);
         lpFileGenerator.addConstraint(statement);
@@ -101,13 +116,13 @@ public class LPTransformer {
         lpFileGenerator.addConstraint(statement);
     }
 
-    private void addBounds() {
+    private void addBounds() throws IOException {
         for (String symbol : usedSymbols) {
             lpFileGenerator.addBound(0, symbol);
         }
     }
 
-    private void addTypes() {
+    private void addTypes() throws IOException {
         String statement = "";
         for (int i = 1; i <= items.size(); i++) {
             statement += " error" + i;

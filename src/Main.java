@@ -1,7 +1,6 @@
-import data.ItemsData;
 import data.Position;
-import output.FileOperator;
 import transformation.LPTransformer;
+import transformation.LPTransformerFileHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +12,12 @@ public class Main {
     }
 
     private static void saveSimpleTriangle() {
-        //ItemsData itemsData = new ItemsData(prepareItems());
-        LPTransformer lpTransformer = new LPTransformer(prepareItems());
+        LPTransformerFileHandler factory = new LPTransformerFileHandler(prepareItems(), "triangle.lp");
+        LPTransformer lpTransformer = factory.getInstance();
 
         lpTransformer.transform();
 
-        FileOperator.writeTo("triangle.lp", lpTransformer.toString());
+        factory.closeFileHandler();
     }
 
     private static List<Position> prepareItems() {
