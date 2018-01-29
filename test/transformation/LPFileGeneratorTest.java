@@ -7,9 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
+import output.Writer;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,7 +16,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class LPFileGeneratorTest {
 
     @Mock
-    private BufferedWriter bufferedWriter;
+    private Writer writer;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -28,111 +26,112 @@ public class LPFileGeneratorTest {
     @Before
     public void setUp() {
         initMocks(this);
-        lpFileGenerator = new LPFileGenerator(bufferedWriter);
+        lpFileGenerator = new LPFileGenerator(writer);
     }
 
     @Test
-    public void testAddObjectiveFunction_Maximize() throws IOException {
+    public void testAddObjectiveFunction_Maximize() {
         lpFileGenerator.addObjectiveFunction(Direction.MAXIMIZE, "x1 + x2 + x3");
 
-        verify(bufferedWriter).write("Maximize");
-        verify(bufferedWriter).write("x1 + x2 + x3");
+        verify(writer).addString("Maximize");
+        verify(writer).addString("x1 + x2 + x3");
     }
 
     @Test
-    public void testAddObjectiveFunction_Minimize() throws IOException {
+    public void testAddObjectiveFunction_Minimize() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
 
-        verify(bufferedWriter).write("Minimize");
-        verify(bufferedWriter).write("x1 + x2 + x3");
+        verify(writer).addString("Minimize");
+        verify(writer).addString("x1 + x2 + x3");
     }
 
     @Test
-    public void testAddConstraint_ObjectiveWasNotAdded() throws IOException {
+    public void testAddConstraint_ObjectiveWasNotAdded() {
         thrown.expect(IllegalArgumentException.class);
         lpFileGenerator.addConstraint("x1 <= 3 x2");
     }
 
     @Test
-    public void testAddConstraint_ObjectiveIsFirst() throws IOException {
+    public void testAddConstraint_ObjectiveIsFirst() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
 
-        verify(bufferedWriter).write("Subject To");
-        verify(bufferedWriter).write("x1 <= 3 x2");
+        verify(writer).addString("Subject To");
+        verify(writer).addString("x1 <= 3 x2");
     }
 
     @Test
-    public void testAddConstraint_ObjectiveHasTwo() throws IOException {
+    public void testAddConstraint_ObjectiveHasTwo() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
 
-        verify(bufferedWriter).write("Subject To");
-        verify(bufferedWriter, times(2)).write("x1 <= 3 x2");
+        verify(writer).addString("Subject To");
+        verify(writer, times(2)).addString("x1 <= 3 x2");
     }
 
     @Test
-    public void testAddBound_ConstraintWasNotAdded() throws IOException {
+    public void testAddBound_ConstraintWasNotAdded() {
         thrown.expect(IllegalArgumentException.class);
         lpFileGenerator.addBound(5.0, "<=", 7.8);
     }
 
     @Test
-    public void testAddBound_ConstraintIsFirst() throws IOException {
+    public void testAddBound_ConstraintIsFirst() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
 
         lpFileGenerator.addBound(5.0, "x2", 7.8);
 
-        verify(bufferedWriter).write("Bounds");
-        verify(bufferedWriter).write(" 5.00 <= x2 <= 7.80");
+        verify(writer).addString("Bounds");
+        verify(writer).addString(" 5.00 <= x2 <= 7.80");
     }
 
     @Test
-    public void testAddBound_ConstraintHasTwo() throws IOException {
+    public void testAddBound_ConstraintHasTwo() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
 
         lpFileGenerator.addBound(5.0, "x2", 7.8);
         lpFileGenerator.addBound(5.0, "x2");
 
-        verify(bufferedWriter).write("Bounds");
-        verify(bufferedWriter).write(" 5.00 <= x2 <= 7.80");
-        verify(bufferedWriter).write(" 5.00 <= x2");
+        verify(writer).addString("Bounds");
+        verify(writer).addString(" 5.00 <= x2 <= 7.80");
+        verify(writer).addString(" 5.00 <= x2");
     }
 
     @Test
-    public void testAddType_ConstraintWasNotAdded() throws IOException {
+    public void testAddType_ConstraintWasNotAdded() {
         thrown.expect(IllegalArgumentException.class);
         lpFileGenerator.addType(Type.BOOLEAN, "x1");
     }
 
     @Test
-    public void testAddType() throws IOException {
+    public void testAddType() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
 
         lpFileGenerator.addType(Type.BOOLEAN, "x1 x2");
 
-        verify(bufferedWriter).write("Binary");
-        verify(bufferedWriter).write("x1 x2");
+        verify(writer).addString("Binary");
+        verify(writer).addStringNoNewline("x1 x2");
+        verify(writer).addString("");
     }
 
     @Test
-    public void testAddEnd_ConstraintWasNotAdded() throws IOException {
+    public void testAddEnd_ConstraintWasNotAdded() {
         thrown.expect(IllegalArgumentException.class);
         lpFileGenerator.addEnd();
     }
 
     @Test
-    public void testAddEnd() throws IOException {
+    public void testAddEnd() {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, "x1 + x2 + x3");
         lpFileGenerator.addConstraint("x1 <= 3 x2");
 
         lpFileGenerator.addEnd();
 
-        verify(bufferedWriter).write("end");
+        verify(writer).addString("end");
     }
 
 }

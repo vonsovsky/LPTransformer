@@ -2,9 +2,8 @@ package transformation;
 
 import enums.Direction;
 import enums.Type;
+import output.Writer;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
@@ -15,38 +14,29 @@ public class LPFileGenerator {
     private boolean boundAdded = false;
     private boolean typeAdded = false;
 
-    BufferedWriter bw;
+    Writer writer;
 
-    public LPFileGenerator(BufferedWriter bw) {
-        this.bw = bw;
+    public LPFileGenerator(Writer writer) {
+        this.writer = writer;
     }
 
-    public void addObjectiveFunction(Direction direction, String statement) throws IOException {
+    public void addObjectiveFunction(Direction direction, String statement) {
         if (direction == Direction.MAXIMIZE) {
-            addString("Maximize");
+            writer.addString("Maximize");
         }
         if (direction == Direction.MINIMIZE) {
-            addString("Minimize");
+            writer.addString("Minimize");
         }
-        addString(statement);
+        writer.addString(statement);
         objectiveAdded = true;
     }
 
-    private void addString(String line) throws IOException {
-        bw.write(line);
-        bw.newLine();
-    }
-
-    private void addStringNoNewline(String line) throws IOException {
-        bw.write(line);
-    }
-
-    public void addConstraint(String statement) throws IOException {
+    public void addConstraint(String statement) {
         checkStepAdded(objectiveAdded);
         if (!constraintAdded) {
-            addString("Subject To");
+            writer.addString("Subject To");
         }
-        addString(statement);
+        writer.addString(statement);
         constraintAdded = true;
     }
 
@@ -56,7 +46,7 @@ public class LPFileGenerator {
         }
     }
 
-    public void addBound(double lowerBound, String symbol, double upperBound) throws IOException {
+    public void addBound(double lowerBound, String symbol, double upperBound) {
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
         decimalFormatSymbols.setDecimalSeparator('.');
         DecimalFormat decimalFormat = new DecimalFormat("0.00", decimalFormatSymbols);
@@ -66,7 +56,7 @@ public class LPFileGenerator {
         addBound(statement);
     }
 
-    public void addBound(double lowerBound, String symbol) throws IOException {
+    public void addBound(double lowerBound, String symbol) {
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
         decimalFormatSymbols.setDecimalSeparator('.');
         DecimalFormat decimalFormat = new DecimalFormat("0.00", decimalFormatSymbols);
@@ -75,40 +65,40 @@ public class LPFileGenerator {
         addBound(statement);
     }
 
-    private void addBound(String statement) throws IOException {
+    private void addBound(String statement) {
         checkStepAdded(constraintAdded);
         if (!boundAdded) {
-            addString("Bounds");
+            writer.addString("Bounds");
         }
-        addString(statement);
+        writer.addString(statement);
         boundAdded = true;
     }
 
-    public void addTypePartial(Type type, String statement) throws IOException {
+    public void addTypePartial(Type type, String statement) {
         checkStepAdded(constraintAdded);
         if (!typeAdded) {
             if (type == Type.INTEGER) {
-                addString("General");
+                writer.addString("General");
             }
             if (type == Type.BOOLEAN) {
-                addString("Binary");
+                writer.addString("Binary");
             }
         }
-        addStringNoNewline(statement);
+        writer.addStringNoNewline(statement);
         typeAdded = true;
     }
 
     /**
      * Adds type and breaks line
      */
-    public void addType(Type type, String statement) throws IOException {
+    public void addType(Type type, String statement) {
         addTypePartial(type, statement);
-        addString("");
+        writer.addString("");
     }
 
-    public void addEnd() throws IOException {
+    public void addEnd() {
         checkStepAdded(constraintAdded);
-        addString("end");
+        writer.addString("end");
     }
 
 }

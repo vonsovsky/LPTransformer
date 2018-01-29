@@ -4,8 +4,6 @@ import data.Position;
 import enums.Direction;
 import enums.Type;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.LinkedHashSet;
@@ -23,38 +21,32 @@ public class LPTransformer {
     static int MAXIMUM_TYPES_IN_BUFFER = 512;
 
     private List<Position> items;
-    private BufferedWriter bw;
 
     private Set<String> symbolsToBound = new LinkedHashSet<>();
     private Set<String> symbolsToBinary = new LinkedHashSet<>();
     private LPFileGenerator lpFileGenerator;
 
-    public LPTransformer(List<Position> items, BufferedWriter bw) {
+    public LPTransformer(List<Position> items, LPFileGenerator lpFileGenerator) {
         this.items = items;
-        this.bw = bw;
+        this.lpFileGenerator = lpFileGenerator;
     }
 
     public void transform() {
         checkNotNull(items != null);
         checkArgument(!items.isEmpty(), "Vector requires at least one element");
 
-        lpFileGenerator = new LPFileGenerator(bw);
         transformToFile();
     }
 
     private void transformToFile() {
-        try {
-            addObjectiveFunction();
-            addConstraintsAndRememberBoundSymbols();
-            addBounds();
-            addTypes();
-            lpFileGenerator.addEnd();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        addObjectiveFunction();
+        addConstraintsAndRememberBoundSymbols();
+        addBounds();
+        addTypes();
+        lpFileGenerator.addEnd();
     }
 
-    private void addObjectiveFunction() throws IOException {
+    private void addObjectiveFunction() {
         String statement = " obj: ";
         int diagonalElementsCount = items.size() * (items.size() - 1) / 2;
         for (int i = 0; i < diagonalElementsCount; i++) {
@@ -65,7 +57,7 @@ public class LPTransformer {
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, statement);
     }
 
-    private void addConstraintsAndRememberBoundSymbols() throws IOException {
+    private void addConstraintsAndRememberBoundSymbols() {
         int errorCounter = 1;
         for (int i = 0; i < items.size(); i++) {
             addSymbolsForBoundVars(items.get(i), i + 1 + "");
@@ -82,7 +74,7 @@ public class LPTransformer {
         }
     }
 
-    private void checkDistancesBetweenTwoItems(int index1, int index2, int errorCounter) throws IOException {
+    private void checkDistancesBetweenTwoItems(int index1, int index2, int errorCounter) {
         boolean isDistant = checkIsDistant(index1, index2);
 
         int dimensions = items.get(index1).getPosition().length;
@@ -118,7 +110,7 @@ public class LPTransformer {
         return false;
     }
 
-    private void addCloseConstraint(int index1, int index2, int subIndex, int errorCounter) throws IOException {
+    private void addCloseConstraint(int index1, int index2, int subIndex, int errorCounter) {
         String statement = String.format(" x%d_%d - x%d_%d - %s error%d <= 1",
                 index1 + 1, subIndex + 1, index2 + 1, subIndex + 1, parseDouble(E), errorCounter);
         lpFileGenerator.addConstraint(statement);
@@ -136,8 +128,7 @@ public class LPTransformer {
         return decimalFormat.format(d);
     }
 
-    private void addDistantConstraint(int index1, int index2, int subIndex, int errorCounter)
-            throws IOException {
+    private void addDistantConstraint(int index1, int index2, int subIndex, int errorCounter) {
         String statement = String.format(" x%d_%d - x%d_%d + %d b%d_%d + %s error%d > 1",
                 index1 + 1, subIndex + 1, index2 + 1, subIndex + 1, M,
                 errorCounter, (subIndex + 1) * 2 - 1, parseDouble(E), errorCounter);
@@ -149,13 +140,13 @@ public class LPTransformer {
         lpFileGenerator.addConstraint(statement);
     }
 
-    private void addBounds() throws IOException {
+    private void addBounds() {
         for (String symbol : symbolsToBound) {
             lpFileGenerator.addBound(0, symbol);
         }
     }
 
-    private void addTypes() throws IOException {
+    private void addTypes() {
         String statement = "";
         int counter = 0;
         for (String symbol : symbolsToBinary) {

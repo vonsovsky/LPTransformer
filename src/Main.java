@@ -1,23 +1,27 @@
 import data.Position;
+import output.TransformerWriter;
+import output.Writer;
+import transformation.LPFileGenerator;
 import transformation.LPTransformer;
-import transformation.LPTransformerFileHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         saveSimpleTriangle();
     }
 
     private static void saveSimpleTriangle() {
-        LPTransformerFileHandler factory = new LPTransformerFileHandler(prepareItems(), "triangle.lp");
-        LPTransformer lpTransformer = factory.getInstance();
+        Writer writer = new TransformerWriter("triangle.lp");
+        writer.open();
 
+        LPFileGenerator lpFileGenerator = new LPFileGenerator(writer);
+        LPTransformer lpTransformer = new LPTransformer(prepareItems(), lpFileGenerator);
         lpTransformer.transform();
 
-        factory.closeFileHandler();
+        writer.close();
     }
 
     private static List<Position> prepareItems() {

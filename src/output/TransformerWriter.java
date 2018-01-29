@@ -1,35 +1,38 @@
-package transformation;
-
-import data.Position;
+package output;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
-public class LPTransformerFileHandler {
+public class TransformerWriter implements Writer {
 
-    private List<Position> items;
     private String fileName;
-    private LPTransformer instance = null;
 
     private FileWriter fw = null;
     private BufferedWriter bw = null;
 
-    public LPTransformerFileHandler(List<Position> items, String fileName) {
-        this.items = items;
+    public TransformerWriter(String fileName) {
         this.fileName = fileName;
     }
 
-    public LPTransformer getInstance() {
-        if (instance == null) {
-            createFileHandler();
-            instance = new LPTransformer(items, bw);
+    public void addString(String line) {
+        try {
+            bw.write(line);
+            bw.newLine();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        return instance;
     }
 
-    private void createFileHandler() {
+    public void addStringNoNewline(String line) {
+        try {
+            bw.write(line);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void open() {
         try {
             fw = new FileWriter(fileName);
             bw = new BufferedWriter(fw);
@@ -38,7 +41,7 @@ public class LPTransformerFileHandler {
         }
     }
 
-    public void closeFileHandler() {
+    public void close() {
         try {
             if (bw != null) {
                 bw.close();
