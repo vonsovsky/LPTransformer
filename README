@@ -1,0 +1,6 @@
+Generates LP file for SCIP to solve positions from known distances
+
+On input in Main.java is distance matrix.
+Output is LP file (triangle.lp in current example) that can be loaded into SCIP by:
+
+"scip -f triangle.lp -l triangle.txt"
