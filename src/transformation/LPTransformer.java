@@ -162,8 +162,4 @@ public class LPTransformer {
         lpFileGenerator.addType(Type.BOOLEAN, statement);
     }
 
-    @Override
-    public String toString() {
-        return lpFileGenerator.toString();
-    }
 }
