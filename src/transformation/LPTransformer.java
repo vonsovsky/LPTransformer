@@ -20,6 +20,7 @@ public class LPTransformer {
     private static int M = 1000;
     private static double E = 0.2;
     private static String PARSE_E = "0.0";
+    static int MAXIMUM_TYPES_IN_BUFFER = 512;
 
     private List<Position> items;
     private BufferedWriter bw;
@@ -156,7 +157,14 @@ public class LPTransformer {
 
     private void addTypes() throws IOException {
         String statement = "";
+        int counter = 0;
         for (String symbol : symbolsToBinary) {
+            if (counter >= MAXIMUM_TYPES_IN_BUFFER) {
+                lpFileGenerator.addTypePartial(Type.BOOLEAN, statement);
+                statement = "";
+                counter = 0;
+            }
+            counter++;
             statement += " " + symbol;
         }
         lpFileGenerator.addType(Type.BOOLEAN, statement);

@@ -13,6 +13,7 @@ public class LPFileGenerator {
     private boolean objectiveAdded = false;
     private boolean constraintAdded = false;
     private boolean boundAdded = false;
+    private boolean typeAdded = false;
 
     BufferedWriter bw;
 
@@ -34,6 +35,10 @@ public class LPFileGenerator {
     private void addString(String line) throws IOException {
         bw.write(line);
         bw.newLine();
+    }
+
+    private void addStringNoNewline(String line) throws IOException {
+        bw.write(line);
     }
 
     public void addConstraint(String statement) throws IOException {
@@ -79,15 +84,26 @@ public class LPFileGenerator {
         boundAdded = true;
     }
 
-    public void addType(Type type, String statement) throws IOException {
+    public void addTypePartial(Type type, String statement) throws IOException {
         checkStepAdded(constraintAdded);
-        if (type == Type.INTEGER) {
-            addString("General");
+        if (!typeAdded) {
+            if (type == Type.INTEGER) {
+                addString("General");
+            }
+            if (type == Type.BOOLEAN) {
+                addString("Binary");
+            }
         }
-        if (type == Type.BOOLEAN) {
-            addString("Binary");
-        }
-        addString(statement);
+        addStringNoNewline(statement);
+        typeAdded = true;
+    }
+
+    /**
+     * Adds type and breaks line
+     */
+    public void addType(Type type, String statement) throws IOException {
+        addTypePartial(type, statement);
+        addString("");
     }
 
     public void addEnd() throws IOException {

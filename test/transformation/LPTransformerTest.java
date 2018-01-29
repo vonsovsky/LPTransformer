@@ -1,6 +1,7 @@
 package transformation;
 
 import data.Position;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -21,6 +22,11 @@ public class LPTransformerTest {
     @Before
     public void setUp() {
         initMocks(this);
+    }
+
+    @After
+    public void tearDown() {
+        LPTransformer.MAXIMUM_TYPES_IN_BUFFER = 512;
     }
 
     @Test
@@ -129,6 +135,22 @@ public class LPTransformerTest {
         items.add(new Position(0.5, 2));
 
         return items;
+    }
+
+    @Test
+    public void testTransform_BinaryBufferIsWorking() throws IOException {
+        LPTransformer lpTransformer = new LPTransformer(prepareDistantItems(), bufferedWriter);
+        LPTransformer.MAXIMUM_TYPES_IN_BUFFER = 2;
+
+        lpTransformer.transform();
+
+        verify(bufferedWriter).write(" error1 error2");
+        verify(bufferedWriter).write(" error3 error4");
+        verify(bufferedWriter).write(" error5 error6");
+        verify(bufferedWriter).write(" b2_1 b2_2");
+        verify(bufferedWriter).write(" b3_1 b3_2");
+        verify(bufferedWriter).write(" b4_1 b4_2");
+        verify(bufferedWriter).write(" b5_1 b5_2");
     }
 
 }
