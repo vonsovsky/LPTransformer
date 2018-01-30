@@ -1,4 +1,4 @@
-import data.Position;
+import data.Variable;
 import output.TransformerWriter;
 import output.Writer;
 import transformation.LPFileGenerator;
@@ -15,7 +15,7 @@ public class Main {
         //transformData(getRandomDistantPoints(), "random.lp");
     }
 
-    private static void transformData(List<Position> items, String fileName) {
+    private static void transformData(List<Variable> items, String fileName) {
         Writer writer = new TransformerWriter(fileName);
         writer.open();
 
@@ -26,32 +26,32 @@ public class Main {
         writer.close();
     }
 
-    private static List<Position> getSimpleTriangle() {
-        List<Position> items = new ArrayList<>();
+    private static List<Variable> getSimpleTriangle() {
+        List<Variable> items = new ArrayList<>();
 
-        items.add(new Position(0, 0));
-        items.add(new Position(0.5, 0));
-        items.add(new Position(0.5, 0.5));
-
-        return items;
-    }
-
-    private static List<Position> getSimpleRectangle() {
-        List<Position> items = new ArrayList<>();
-
-        items.add(new Position(0, 0));
-        items.add(new Position(0.5, 0));
-        items.add(new Position(0, 2));
-        items.add(new Position(0.5, 2));
+        items.add(new Variable(0, 0));
+        items.add(new Variable(0.5, 0));
+        items.add(new Variable(0.5, 0.5));
 
         return items;
     }
 
-    private static List<Position> getRandomDistantPoints() {
-        List<Position> items = new ArrayList<>();
+    private static List<Variable> getSimpleRectangle() {
+        List<Variable> items = new ArrayList<>();
+
+        items.add(new Variable(0, 0));
+        items.add(new Variable(0.5, 0));
+        items.add(new Variable(0, 2));
+        items.add(new Variable(0.5, 2));
+
+        return items;
+    }
+
+    private static List<Variable> getRandomDistantPoints() {
+        List<Variable> items = new ArrayList<>();
 
         for (int i = 0; i < 500; i++) {
-            Position pos = new Position(Math.random() * 10, Math.random() * 10, Math.random() * 10,
+            Variable pos = new Variable(Math.random() * 10, Math.random() * 10, Math.random() * 10,
                     Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10,
                     Math.random() * 10, Math.random() * 10, Math.random() * 10);
             items.add(pos);

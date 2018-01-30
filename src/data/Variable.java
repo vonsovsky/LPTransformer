@@ -1,9 +1,9 @@
 package data;
 
-public class Position {
+public class Variable {
     private double[] position;
 
-    public Position(double... position) {
+    public Variable(double... position) {
         this.position = position;
     }
 

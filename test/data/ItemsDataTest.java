@@ -29,12 +29,12 @@ public class ItemsDataTest {
         assertEquals(itemsData.getDistance(2, 2), 0, .8);
     }
 
-    private List<Position> prepareItems() {
-        List<Position> items = new ArrayList<>();
+    private List<Variable> prepareItems() {
+        List<Variable> items = new ArrayList<>();
 
-        items.add(new Position(0, 0));
-        items.add(new Position(0.5, 0));
-        items.add(new Position(0.5, 0.5));
+        items.add(new Variable(0, 0));
+        items.add(new Variable(0.5, 0));
+        items.add(new Variable(0.5, 0.5));
 
         return items;
     }

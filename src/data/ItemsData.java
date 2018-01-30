@@ -7,9 +7,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class ItemsData {
 
-    List<Position> items;
+    List<Variable> items;
 
-    public ItemsData(List<Position> items) {
+    public ItemsData(List<Variable> items) {
         this.items = items;
     }
 
@@ -17,8 +17,8 @@ public class ItemsData {
         checkArgument(index1 < items.size());
         checkArgument(index2 < items.size());
 
-        Position p1 = items.get(index1);
-        Position p2 = items.get(index2);
+        Variable p1 = items.get(index1);
+        Variable p2 = items.get(index2);
 
         return getEuclideanDistance(p1.getPosition(), p2.getPosition());
     }

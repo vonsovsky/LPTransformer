@@ -1,6 +1,6 @@
 package transformation;
 
-import data.Position;
+import data.Variable;
 import enums.Direction;
 import enums.Type;
 
@@ -20,13 +20,13 @@ public class LPTransformer {
     private static String PARSE_E = "0.0";
     static int MAXIMUM_TYPES_IN_BUFFER = 512;
 
-    private List<Position> items;
+    private List<Variable> items;
 
     private Set<String> symbolsToBound = new LinkedHashSet<>();
     private Set<String> symbolsToBinary = new LinkedHashSet<>();
     private LPFileGenerator lpFileGenerator;
 
-    public LPTransformer(List<Position> items, LPFileGenerator lpFileGenerator) {
+    public LPTransformer(List<Variable> items, LPFileGenerator lpFileGenerator) {
         this.items = items;
         this.lpFileGenerator = lpFileGenerator;
     }
@@ -68,7 +68,7 @@ public class LPTransformer {
         }
     }
 
-    private void addSymbolsForBoundVars(Position item, String index) {
+    private void addSymbolsForBoundVars(Variable item, String index) {
         for (int i = 1; i <= item.getPosition().length; i++) {
             symbolsToBound.add("x" + index + "_" + i);
         }
