@@ -10,9 +10,9 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        transformData(getSimpleTriangle(), "triangle.lp");
-        transformData(getSimpleRectangle(), "rectangle.lp");
-        //transformData(getRandomDistantPoints(), "random.lp");
+        //transformData(getSimpleTriangle(), "triangle.lp");
+        //transformData(getSimpleRectangle(), "rectangle.lp");
+        transformData(getRandomDistantPoints(), "random.lp");
     }
 
     private static void transformData(List<Variable> items, String fileName) {
@@ -50,10 +50,10 @@ public class Main {
     private static List<Variable> getRandomDistantPoints() {
         List<Variable> items = new ArrayList<>();
 
-        for (int i = 0; i < 500; i++) {
-            Variable pos = new Variable("x" + (i + 1), Math.random() * 10, Math.random() * 10, Math.random() * 10,
-                    Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10,
-                    Math.random() * 10, Math.random() * 10, Math.random() * 10);
+        for (int i = 0; i < 100; i++) {
+            Variable pos = new Variable("x" + (i + 1), Math.random() * 10/*, Math.random() * 10, Math.random() * 10,
+                    Math.random() * 10/*, Math.random() * 10, Math.random() * 10, Math.random() * 10,
+                    Math.random() * 10, Math.random() * 10, Math.random() * 10*/);
             items.add(pos);
         }
 

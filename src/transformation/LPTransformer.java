@@ -16,8 +16,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class LPTransformer {
 
     private static int M = 1000;
-    private static double E = 0.2;
     private static String PARSE_E = "0.0";
+	private static double UPPER_VARIABLE_BOUND = 3;
+	private static double E = UPPER_VARIABLE_BOUND + 1;
     static int MAXIMUM_TYPES_IN_BUFFER = 512;
 
     private List<Variable> items;
@@ -40,7 +41,7 @@ public class LPTransformer {
     private void transformToFile() {
         addObjectiveFunction();
         addConstraints();
-        addBounds();
+        addBounds(UPPER_VARIABLE_BOUND);
         addTypes();
         lpFileGenerator.addEnd();
     }
@@ -134,10 +135,10 @@ public class LPTransformer {
         lpFileGenerator.addConstraint(statement);
     }
 
-    private void addBounds() {
+    private void addBounds(double upper) {
         for (Variable var : items) {
             for (int i = 0; i < var.getPosition().length; i++) {
-                lpFileGenerator.addBound(0, var.getVariableName(i));
+                lpFileGenerator.addBound(0, var.getVariableName(i), upper);
             }
         }
 
