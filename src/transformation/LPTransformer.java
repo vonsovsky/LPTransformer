@@ -57,25 +57,25 @@ public class LPTransformer {
     }
 
     private void addConstraints() {
-        int errorCounter = 1;
+        int pairCounter = 1;
         for (int i = 0; i < items.size(); i++) {
             for (int j = i + 1; j < items.size(); j++) {
-                checkDistancesBetweenTwoItems(items.get(i), items.get(j), errorCounter);
-                errorCounter++;
+                checkDistancesBetweenTwoItems(items.get(i), items.get(j), pairCounter);
+                pairCounter++;
             }
         }
     }
 
-    private void checkDistancesBetweenTwoItems(Variable var1, Variable var2, int errorCounter) {
+    private void checkDistancesBetweenTwoItems(Variable var1, Variable var2, int pairCounter) {
         String distantExtraStatement = "";
         int dimensions = var1.getPosition().length;
 
         for (int i = 0; i < dimensions; i++) {
             if (var1.isDistant(var2)) {
-                addDistantConstraint(var1.getVariableName(i), var2.getVariableName(i), i, errorCounter);
-                distantExtraStatement += addItemBinaryVariables(errorCounter, i);
+                addDistantConstraint(var1.getVariableName(i), var2.getVariableName(i), i, pairCounter);
+                distantExtraStatement += addItemBinaryVariables(pairCounter, i);
             } else {
-                addCloseConstraint(var1.getVariableName(i), var2.getVariableName(i), errorCounter);
+                addCloseConstraint(var1.getVariableName(i), var2.getVariableName(i), pairCounter);
             }
         }
 
@@ -97,13 +97,13 @@ public class LPTransformer {
         }
     }
 
-    private void addCloseConstraint(String varName1, String varName2, int errorCounter) {
+    private void addCloseConstraint(String varName1, String varName2, int pairCounter) {
         String statement = String.format(" %s - %s - %s error%d <= 1",
-                varName1, varName2, parseDouble(E), errorCounter);
+                varName1, varName2, parseDouble(E), pairCounter);
         lpFileGenerator.addConstraint(statement);
 
         statement = String.format(" %s - %s - %s error%d <= 1",
-                varName2, varName1, parseDouble(E), errorCounter);
+                varName2, varName1, parseDouble(E), pairCounter);
         lpFileGenerator.addConstraint(statement);
     }
 
@@ -115,13 +115,13 @@ public class LPTransformer {
         return decimalFormat.format(d);
     }
 
-    private void addDistantConstraint(String varName1, String varName2, int subIndex, int errorCounter) {
+    private void addDistantConstraint(String varName1, String varName2, int subIndex, int pairCounter) {
         String statement = String.format(" %s - %s + %d b%d_%d + %s error%d > 1",
-                varName1, varName2, M, errorCounter, (subIndex + 1) * 2 - 1, parseDouble(E), errorCounter);
+                varName1, varName2, M, pairCounter, (subIndex + 1) * 2 - 1, parseDouble(E), pairCounter);
         lpFileGenerator.addConstraint(statement);
 
         statement = String.format(" %s - %s + %d b%d_%d + %s error%d > 1",
-                varName2, varName1, M, errorCounter, (subIndex + 1) * 2, parseDouble(E), errorCounter);
+                varName2, varName1, M, pairCounter, (subIndex + 1) * 2, parseDouble(E), pairCounter);
         lpFileGenerator.addConstraint(statement);
     }
 
