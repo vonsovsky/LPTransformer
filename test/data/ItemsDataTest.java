@@ -32,9 +32,9 @@ public class ItemsDataTest {
     private List<Variable> prepareItems() {
         List<Variable> items = new ArrayList<>();
 
-        items.add(new Variable(0, 0));
-        items.add(new Variable(0.5, 0));
-        items.add(new Variable(0.5, 0.5));
+        items.add(new Variable("x1", 0, 0));
+        items.add(new Variable("x2", 0.5, 0));
+        items.add(new Variable("x3", 0.5, 0.5));
 
         return items;
     }

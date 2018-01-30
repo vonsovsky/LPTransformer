@@ -29,9 +29,9 @@ public class Main {
     private static List<Variable> getSimpleTriangle() {
         List<Variable> items = new ArrayList<>();
 
-        items.add(new Variable(0, 0));
-        items.add(new Variable(0.5, 0));
-        items.add(new Variable(0.5, 0.5));
+        items.add(new Variable("x1", 0, 0));
+        items.add(new Variable("x2", 0.5, 0));
+        items.add(new Variable("x3", 0.5, 0.5));
 
         return items;
     }
@@ -39,10 +39,10 @@ public class Main {
     private static List<Variable> getSimpleRectangle() {
         List<Variable> items = new ArrayList<>();
 
-        items.add(new Variable(0, 0));
-        items.add(new Variable(0.5, 0));
-        items.add(new Variable(0, 2));
-        items.add(new Variable(0.5, 2));
+        items.add(new Variable("x1", 0, 0));
+        items.add(new Variable("x2", 0.5, 0));
+        items.add(new Variable("x3", 0, 2));
+        items.add(new Variable("x4", 0.5, 2));
 
         return items;
     }
@@ -51,7 +51,7 @@ public class Main {
         List<Variable> items = new ArrayList<>();
 
         for (int i = 0; i < 500; i++) {
-            Variable pos = new Variable(Math.random() * 10, Math.random() * 10, Math.random() * 10,
+            Variable pos = new Variable("x" + (i + 1), Math.random() * 10, Math.random() * 10, Math.random() * 10,
                     Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10,
                     Math.random() * 10, Math.random() * 10, Math.random() * 10);
             items.add(pos);
