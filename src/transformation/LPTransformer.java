@@ -67,19 +67,29 @@ public class LPTransformer {
     }
 
     private void checkDistancesBetweenTwoItems(Variable var1, Variable var2, int pairCounter) {
+        if (var1.isDistant(var2)) {
+            addDistantItems(var1, var2, pairCounter);
+        } else {
+            addCloseItems(var1, var2, pairCounter);
+        }
+    }
+
+    private void addDistantItems(Variable var1, Variable var2, int pairCounter) {
         String distantExtraStatement = "";
         int dimensions = var1.getPosition().length;
 
         for (int i = 0; i < dimensions; i++) {
-            if (var1.isDistant(var2)) {
-                addDistantConstraint(var1.getVariableName(i), var2.getVariableName(i), i, pairCounter);
-                distantExtraStatement += addItemBinaryVariables(pairCounter, i);
-            } else {
-                addCloseConstraint(var1.getVariableName(i), var2.getVariableName(i), pairCounter);
-            }
+            addDistantConstraint(var1.getVariableName(i), var2.getVariableName(i), i, pairCounter);
+            distantExtraStatement += addItemBinaryVariables(pairCounter, i);
         }
 
         addItemBinaryVariablesConstraint(distantExtraStatement, dimensions);
+    }
+
+    private void addCloseItems(Variable var1, Variable var2, int pairCounter) {
+        for (int i = 0; i < var1.getPosition().length; i++) {
+            addCloseConstraint(var1.getVariableName(i), var2.getVariableName(i), pairCounter);
+        }
     }
 
     private String addItemBinaryVariables(int index, int subIndex) {
