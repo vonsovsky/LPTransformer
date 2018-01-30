@@ -82,19 +82,27 @@ public class LPTransformer {
         for (int i = 0; i < dimensions; i++) {
             if (isDistant) {
                 addDistantConstraint(index1, index2, i, errorCounter);
-                distantExtraStatement += String.format(" b%d_%d + b%d_%d +",
-                        errorCounter, (i + 1) * 2 - 1, errorCounter, (i + 1) * 2);
-                symbolsToBinary.add("b" + errorCounter + "_" + ((i + 1) * 2 - 1));
-                symbolsToBinary.add("b" + errorCounter + "_" + ((i + 1) * 2));
+                distantExtraStatement += addItemBinaryVariables(i, errorCounter);
             } else {
                 addCloseConstraint(index1, index2, i, errorCounter);
             }
         }
 
-        if (!distantExtraStatement.isEmpty()) {
-            distantExtraStatement = distantExtraStatement.substring(0, distantExtraStatement.length() - 2);
-            distantExtraStatement += " = " + (dimensions * 2 - 1);
-            lpFileGenerator.addConstraint(distantExtraStatement);
+        addItemBinaryVariablesConstraint(distantExtraStatement, dimensions);
+    }
+
+    private String addItemBinaryVariables(int index, int subIndex) {
+        symbolsToBinary.add("b" + index + "_" + ((subIndex + 1) * 2 - 1));
+        symbolsToBinary.add("b" + index + "_" + ((subIndex + 1) * 2));
+        return String.format(" b%d_%d + b%d_%d +",
+                index, (subIndex + 1) * 2 - 1, index, (subIndex + 1) * 2);
+    }
+
+    private void addItemBinaryVariablesConstraint(String statement, int dimensions) {
+        if (!statement.isEmpty()) {
+            statement = statement.substring(0, statement.length() - 2);
+            statement += " = " + (dimensions * 2 - 1);
+            lpFileGenerator.addConstraint(statement);
         }
     }
 
