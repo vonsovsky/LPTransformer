@@ -119,7 +119,8 @@ public class LPTransformerTest {
         verify(lpFileGenerator).addBound(0.0, "x4_2");
 
         verify(lpFileGenerator).addType(Type.BOOLEAN,
-                " error1 error2 error3 error4 error5 error6 b2_1 b2_2 b3_1 b3_2 b4_1 b4_2 b5_1 b5_2");
+                " error1 error2 error3 error4 error5 error6" +
+                " b2_1 b2_2 b2_3 b2_4 b3_1 b3_2 b3_3 b3_4 b4_1 b4_2 b4_3 b4_4 b5_1 b5_2 b5_3 b5_4");
         verify(lpFileGenerator).addEnd();
     }
 
@@ -146,9 +147,13 @@ public class LPTransformerTest {
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," error3 error4");
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," error5 error6");
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b2_1 b2_2");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b2_3 b2_4");
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b3_1 b3_2");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b3_3 b3_4");
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b4_1 b4_2");
-        verify(lpFileGenerator).addType(Type.BOOLEAN," b5_1 b5_2");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b4_3 b4_4");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b5_1 b5_2");
+        verify(lpFileGenerator).addType(Type.BOOLEAN," b5_3 b5_4");
     }
 
     @Test
@@ -160,9 +165,12 @@ public class LPTransformerTest {
 
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN, " error1 error2 error3");
         verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," error4 error5 error6");
-        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b2_1 b2_2 b3_1");
-        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b3_2 b4_1 b4_2");
-        verify(lpFileGenerator).addType(Type.BOOLEAN," b5_1 b5_2");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b2_1 b2_2 b2_3");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b2_4 b3_1 b3_2");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b3_3 b3_4 b4_1");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b4_2 b4_3 b4_4");
+        verify(lpFileGenerator).addTypePartial(Type.BOOLEAN," b5_1 b5_2 b5_3");
+        verify(lpFileGenerator).addType(Type.BOOLEAN," b5_4");
     }
 
 }

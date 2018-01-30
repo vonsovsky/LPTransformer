@@ -84,7 +84,8 @@ public class LPTransformer {
                 addDistantConstraint(index1, index2, i, errorCounter);
                 distantExtraStatement += String.format(" b%d_%d + b%d_%d +",
                         errorCounter, (i + 1) * 2 - 1, errorCounter, (i + 1) * 2);
-                symbolsToBinary.add("b" + errorCounter + "_" + (i + 1));
+                symbolsToBinary.add("b" + errorCounter + "_" + ((i + 1) * 2 - 1));
+                symbolsToBinary.add("b" + errorCounter + "_" + ((i + 1) * 2));
             } else {
                 addCloseConstraint(index1, index2, i, errorCounter);
             }
