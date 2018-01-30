@@ -50,7 +50,6 @@ public class LPTransformer {
         int diagonalElementsCount = items.size() * (items.size() - 1) / 2;
         for (int i = 0; i < diagonalElementsCount; i++) {
             statement += "error" + (i + 1) + " + ";
-            symbolsToBinary.add("error" + (i + 1));
         }
         statement = statement.substring(0, statement.length() - 3);
         lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, statement);
@@ -140,6 +139,11 @@ public class LPTransformer {
             for (int i = 0; i < var.getPosition().length; i++) {
                 lpFileGenerator.addBound(0, var.getVariableName(i));
             }
+        }
+
+        int diagonalElementsCount = items.size() * (items.size() - 1) / 2;
+        for (int i = 0; i < diagonalElementsCount; i++) {
+            lpFileGenerator.addBound(0, "error" + (i + 1), 1);
         }
     }
 
