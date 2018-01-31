@@ -49,11 +49,30 @@ public class Main {
 
     private static List<Variable> getRandomDistantPoints() {
         List<Variable> items = new ArrayList<>();
-
+		int max = 300;
+		int dim = 3;
         for (int i = 0; i < 100; i++) {
-            Variable pos = new Variable("x" + (i + 1), Math.random() * 10/*, Math.random() * 10, Math.random() * 10,
-                    Math.random() * 10/*, Math.random() * 10, Math.random() * 10, Math.random() * 10,
-                    Math.random() * 10, Math.random() * 10, Math.random() * 10*/);
+			double[] r = new double[dim];
+			for (int d = 0 ; d < dim; d++) {
+				r[d] = Math.random() * max;
+			}
+            Variable pos = new Variable("x" + (i + 1), r);
+            items.add(pos);
+        }
+
+        return items;
+    }
+	
+	private static List<Variable> getRandomDistantRotations() {
+        List<Variable> items = new ArrayList<>();
+		int max = 300;
+		int dim = 3;
+        for (int i = 0; i < 100; i++) {
+			double[] r = new double[dim];
+			for (int d = 0 ; d < dim; d++) {
+				r[d] = Math.random() * max;
+			}
+            Variable pos = new Variable("x" + (i + 1), r);
             items.add(pos);
         }
 

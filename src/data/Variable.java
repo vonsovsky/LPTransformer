@@ -25,12 +25,10 @@ public class Variable {
         for (int i = 0; i < position.length; i++) {
             double a = position[i];
             double b = other.getPosition()[i];
-
             if (Math.abs(a - b) > 1) {
                 return true;
             }
         }
-
         return false;
     }
 }

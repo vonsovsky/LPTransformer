@@ -18,7 +18,7 @@ public class LPTransformer {
     private static int M = 1000;
     private static String PARSE_E = "0.0";
 	private static double UPPER_VARIABLE_BOUND = 3;
-	private static double E = UPPER_VARIABLE_BOUND + 1;
+	private static double E = 1;
     static int MAXIMUM_TYPES_IN_BUFFER = 512;
 
     private List<Variable> items;
@@ -47,6 +47,12 @@ public class LPTransformer {
     }
 
     private void addObjectiveFunction() {
+        String statement = " obj: ";
+        statement = statement + "error0";
+        lpFileGenerator.addObjectiveFunction(Direction.MINIMIZE, statement);
+    }
+	
+	 private void addObjectiveFunctionWithMultipleErrors() {
         String statement = " obj: ";
         int diagonalElementsCount = items.size() * (items.size() - 1) / 2;
         for (int i = 0; i < diagonalElementsCount; i++) {
@@ -109,11 +115,11 @@ public class LPTransformer {
 
     private void addCloseConstraint(String varName1, String varName2, int pairCounter) {
         String statement = String.format(" %s - %s - %s error%d <= 1",
-                varName1, varName2, parseDouble(E), pairCounter);
+                varName1, varName2, parseDouble(E), 0 * pairCounter); // !!! 0 *
         lpFileGenerator.addConstraint(statement);
 
         statement = String.format(" %s - %s - %s error%d <= 1",
-                varName2, varName1, parseDouble(E), pairCounter);
+                varName2, varName1, parseDouble(E), 0 * pairCounter); // !!! 0 *
         lpFileGenerator.addConstraint(statement);
     }
 
@@ -127,11 +133,11 @@ public class LPTransformer {
 
     private void addDistantConstraint(String varName1, String varName2, int subIndex, int pairCounter) {
         String statement = String.format(" %s - %s + %d b%d_%d + %s error%d > 1",
-                varName1, varName2, M, pairCounter, (subIndex + 1) * 2 - 1, parseDouble(E), pairCounter);
+                varName1, varName2, M, pairCounter, (subIndex + 1) * 2 - 1, parseDouble(E), 0 * pairCounter); // !!! 0 *
         lpFileGenerator.addConstraint(statement);
 
         statement = String.format(" %s - %s + %d b%d_%d + %s error%d > 1",
-                varName2, varName1, M, pairCounter, (subIndex + 1) * 2, parseDouble(E), pairCounter);
+                varName2, varName1, M, pairCounter, (subIndex + 1) * 2, parseDouble(E), 0 * pairCounter);// !!! 0 *
         lpFileGenerator.addConstraint(statement);
     }
 
@@ -143,9 +149,10 @@ public class LPTransformer {
         }
 
         int diagonalElementsCount = items.size() * (items.size() - 1) / 2;
-        for (int i = 0; i < diagonalElementsCount; i++) {
-            lpFileGenerator.addBound(0, "error" + (i + 1), 1);
-        }
+        //for (int i = 0; i < diagonalElementsCount; i++) {
+        //    lpFileGenerator.addBound(0, "error" + (i + 1), 1);
+        //}
+		lpFileGenerator.addBound(0, "error0");
     }
 
     private void addTypes() {
