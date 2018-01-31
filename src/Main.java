@@ -1,4 +1,6 @@
+import data.Distances;
 import data.Variable;
+import data.rotation.RotationDistances;
 import output.TransformerWriter;
 import output.Writer;
 import transformation.LPFileGenerator;
@@ -12,15 +14,16 @@ public class Main {
     public static void main(String[] args) {
         //transformData(getSimpleTriangle(), "triangle.lp");
         //transformData(getSimpleRectangle(), "rectangle.lp");
-        transformData(getRandomDistantPoints(), "random.lp");
+        //transformData(getRandomDistantPoints(), "random_points.lp");
+        transformData(getRandomRotations(), "random_rotations.lp");
     }
 
-    private static void transformData(List<Variable> items, String fileName) {
+    private static void transformData(Distances distances, String fileName) {
         Writer writer = new TransformerWriter(fileName);
         writer.open();
 
         LPFileGenerator lpFileGenerator = new LPFileGenerator(writer);
-        LPTransformer lpTransformer = new LPTransformer(items, lpFileGenerator);
+        LPTransformer lpTransformer = new LPTransformer(distances, lpFileGenerator);
         lpTransformer.transform();
 
         writer.close();
@@ -63,20 +66,10 @@ public class Main {
         return items;
     }
 	
-	private static List<Variable> getRandomDistantRotations() {
-        List<Variable> items = new ArrayList<>();
-		int max = 300;
-		int dim = 3;
-        for (int i = 0; i < 100; i++) {
-			double[] r = new double[dim];
-			for (int d = 0 ; d < dim; d++) {
-				r[d] = Math.random() * max;
-			}
-            Variable pos = new Variable("x" + (i + 1), r);
-            items.add(pos);
-        }
-
-        return items;
+	
+	private static Distances getRandomRotations() {
+		RotationDistances distances = new RotationDistances(40);
+		return distances;
     }
 
 }

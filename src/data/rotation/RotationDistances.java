@@ -1,5 +1,6 @@
 package data.rotation;
 
+import data.Distances;
 import geometry.Point;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ import java.util.Random;
  *
  * @author Antonin Pavelka
  */
-public class RotationDistances {
+public class RotationDistances implements Distances {
 
 	private Random random = new Random(1);
 	private PointSequence[] items;
@@ -19,6 +20,7 @@ public class RotationDistances {
 		}
 	}
 
+	@Override
 	public double getDistance(int index1, int index2) {
 		PointSequence item1 = items[index1];
 		PointSequence item2 = items[index2];
@@ -56,7 +58,11 @@ public class RotationDistances {
 		return random.nextDouble() * (max - min) + min;
 	}
 
-	public static void main(String[] args) {
+	public int size() {
+		return items.length;
+	}
+
+	/*public static void main(String[] args) {
 		RotationDistances rd = new RotationDistances(1000);
 		for (int i = 0; i < 100; i++) {
 			//System.out.println(rd.createRandomUnit().size());
@@ -64,6 +70,6 @@ public class RotationDistances {
 			//Point[] rr = rd.createRandomRotation();
 			//System.out.println(rr[0] + "   " + rr[1]);
 		}
-	}
+	}*/
 
 }

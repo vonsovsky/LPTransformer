@@ -26,6 +26,7 @@ public class PointSequence {
 		}
 		rmsd /= size();
 		rmsd = Math.sqrt(rmsd);
+		System.out.println(rmsd);
 		return rmsd;
 	}
 
