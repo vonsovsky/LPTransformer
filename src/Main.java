@@ -68,7 +68,7 @@ public class Main {
 	
 	
 	private static Distances getRandomRotations() {
-		RotationDistances distances = new RotationDistances(40);
+		RotationDistances distances = new RotationDistances(20);
 		return distances;
     }
 

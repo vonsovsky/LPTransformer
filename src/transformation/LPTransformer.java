@@ -40,7 +40,8 @@ public class LPTransformer {
 	}
 
 	private void transformToFile() {
-		addObjectiveFunction();
+		//addObjectiveFunction();
+		addObjectiveFunctionWithMultipleErrors();
 		addConstraints();
 		addBounds(UPPER_VARIABLE_BOUND);
 		addTypes();
@@ -124,11 +125,11 @@ public class LPTransformer {
 
 	private void addCloseConstraint(String varName1, String varName2, int pairCounter) {
 		String statement = String.format(" %s - %s - %s error%d <= 1",
-			varName1, varName2, parseDouble(E), 0 * pairCounter); // !!! 0 *
+			varName1, varName2, parseDouble(E), pairCounter); // !!! 0 *
 		lpFileGenerator.addConstraint(statement);
 
 		statement = String.format(" %s - %s - %s error%d <= 1",
-			varName2, varName1, parseDouble(E), 0 * pairCounter); // !!! 0 *
+			varName2, varName1, parseDouble(E), pairCounter); // !!! 0 *
 		lpFileGenerator.addConstraint(statement);
 	}
 
@@ -142,11 +143,11 @@ public class LPTransformer {
 
 	private void addDistantConstraint(String varName1, String varName2, int subIndex, int pairCounter) {
 		String statement = String.format(" %s - %s + %d b%d_%d + %s error%d > 1",
-			varName1, varName2, M, pairCounter, (subIndex + 1) * 2 - 1, parseDouble(E), 0 * pairCounter); // !!! 0 *
+			varName1, varName2, M, pairCounter, (subIndex + 1) * 2 - 1, parseDouble(E), pairCounter); // !!! 0 *
 		lpFileGenerator.addConstraint(statement);
 
 		statement = String.format(" %s - %s + %d b%d_%d + %s error%d > 1",
-			varName2, varName1, M, pairCounter, (subIndex + 1) * 2, parseDouble(E), 0 * pairCounter);// !!! 0 *
+			varName2, varName1, M, pairCounter, (subIndex + 1) * 2, parseDouble(E), pairCounter);// !!! 0 *
 		lpFileGenerator.addConstraint(statement);
 	}
 
@@ -158,10 +159,10 @@ public class LPTransformer {
 		}
 
 		int diagonalElementsCount = distances.size() * (distances.size() - 1) / 2;
-		//for (int i = 0; i < diagonalElementsCount; i++) {
-		//    lpFileGenerator.addBound(0, "error" + (i + 1), 1);
-		//}
-		lpFileGenerator.addBound(0, "error0");
+		for (int i = 0; i < diagonalElementsCount; i++) {
+		    lpFileGenerator.addBound(0, "error" + (i + 1), 1);
+		}
+		//lpFileGenerator.addBound(0, "error0"); // !!!
 	}
 
 	private void addTypes() {
